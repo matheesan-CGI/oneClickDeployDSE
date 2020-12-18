@@ -40,11 +40,11 @@ proxy:
 ```sh
 singleuser:
   memory:
-    limit: 256Mi
+    limit: 1G
     guarantee: 1G
   cpu:
-    limit: .5
-    guarantee: .5
+    limit: 1
+    guarantee: 1
   storage:
     type: none
 ```
