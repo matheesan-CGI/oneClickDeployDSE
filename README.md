@@ -13,7 +13,7 @@ Dillinger is a cloud-enabled, mobile-ready, offline-storage, AngularJS powered H
 #### K3d:
 ```sh
 #Create Cluster with chosen name
-k3d cluster create <NAME>
+k3d cluster create <NAME> --agents 3
 #Allow Kubeconfig to use k3d cluster
 k3d kubeconfig merge <NAME> --switch-context
 #Use the new cluster with kubectl
