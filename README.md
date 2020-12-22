@@ -89,7 +89,7 @@ kubectl get pod --namespace $NAMESPACE
 ```
 
 ### Current State: 
-![alt text](https://github.com/matheesan-CGI/oneClickDeployDSE/edit/main/12_18_20_Current_State.png?raw=true)
+![alt text](https://github.com/matheesan-CGI/oneClickDeployDSE/edit/main/Screen Shot 2020-12-22 at 10.04.42 AM.png?raw=true)
 
 
 #### Extra Information
