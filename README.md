@@ -260,9 +260,23 @@ print(f"IP Address: {ip_address}")
 # END
 
 ### Current State: 
-![WIP image](https://github.com/matheesan-CGI/oneClickDeployDSE/edit/main/12-23-20WIP.png?raw=true)
+ --> See the latest 4 images for current state
 
-#### Extra Information
+### Extra Information/Resources:
+
+Latest Todo(Connect Jupyterhub to es using python):
+https://elasticsearch-py.readthedocs.io/en/7.10.0/
+
+Look into HELK:
+https://github.com/Cyb3rWard0g/HELK
+
+Elastic Docs for Kube:
+https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-deploy-elasticsearch.html
+
+TODO Soon: Add logstash to act as middleware for ES and Kafka:
+https://medium.com/@tharangarajapaksha/elk-stack-in-k8s-cluster-13bb509185e0
+https://towardsdatascience.com/the-basics-of-deploying-logstash-pipelines-to-kubernetes-94a470ad34d9
+
 
 Littlest JupyterHub Installatoin  --> Doesn't fully support Docker env
 
