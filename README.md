@@ -88,6 +88,177 @@ NAMESPACE=jhub
 kubectl get pod --namespace $NAMESPACE
 ```
 
+# Azure ElasticSearch + Kibana Installation
+
+```sh
+az aks create -g matheesanmKubeEnv --name elasticCluster --node-count 7 --generate-ssh-keys
+az aks get-credentials --resource-group matheesanmKubeEnv --name elasticCluster
+```
+
+```sh
+kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
+#Log checking:
+kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
+```
+
+```sh
+cat <<EOF | kubectl apply -f -
+> apiVersion: elasticsearch.k8s.elastic.co/v1 
+> kind: Elasticsearch 
+> metadata: 
+>   name: quickstart 
+> spec: 
+>   version: 7.9.2 #Make sure you use the version of your choice 
+>   http: 
+>     service: 
+>       spec: 
+>         type: LoadBalancer #Adds a External IP 
+>   nodeSets: 
+>   - name: default 
+>     count: 1 
+>     config: 
+>       node.master: true 
+>       node.data: true 
+>       node.ingest: true 
+>       node.store.allow_mmap: false 
+> EOF
+```
+
+```sh
+
+kubectl get elasticsearch
+
+kubectl get pods -w
+
+kubectl logs -f quickstart-es-default-0
+
+kubectl get service quickstart-es-http
+
+PASSWORD=$(kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 —decode)
+
+curl -u "elastic:$PASSWORD" -k "https://52.147.212.172:9200”
+
+Kubectl get svc -A
+
+kubectl get svc quickstart-es-http
+```
+
+KIBANA:
+
+```sh
+cat <<EOF | kubectl apply -f - 
+> apiVersion: kibana.k8s.elastic.co/v1 
+> kind: Kibana 
+> metadata: 
+>   name: quickstart 
+> spec: 
+>   version: 7.9.2 #Make sure Kibana and Elasticsearch are on the same version. 
+>   http: 
+>     service: 
+>       spec: 
+>         type: LoadBalancer #Adds a External IP 
+>   count: 1 
+>   elasticsearchRef: 
+>     name: quickstart 
+> EOF
+```
+
+```sh
+kubectl get kibana
+
+kubectl get -n elasticSearch
+
+curl -u "elastic:$PASSWORD" -k "https://52.147.212.172:9200”
+```
+
+In the background, run the following for now(Until proper Nodeport setup is added to the yaml):
+
+```sh
+kubectl proxy
+```
+
+```sh
+kubectl port-forward service/quickstart-es-http 9200
+```
+
+```sh
+kubectl port-forward service/quickstart-kb-http 5601
+```
+
+```sh
+kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 —decode
+```
+
+
+# KUBE Dashboard Installation(Optional):
+```sh
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+```
+
+### CREATE SERVICE ACCOUNT + Role binding: 
+```sh
+kubectl apply -f https://gist.githubusercontent.com/chukaofili/9e94d966e73566eba5abdca7ccb067e6/raw/0f17cd37d2932fb4c3a2e7f4434d08bc64432090/k8s-dashboard-admin-user.yaml
+```
+
+```sh
+kubectl describe sa admin-user -n kube-system
+```
+
+### Get Secret to access DASHBOARD Then, use Token to sign into dashboard:
+```sh
+kubectl describe secret admin-user-token-ls25k -n kube-system
+```
+
+Then follow rest of JupyterHub Config as you would on k3d, but exclude the cluster creation portion to get jupyterHub on Azure.
+
+### Python Code to verify that jupyterhub can ping to es:
+#### TODO: Get the code to connect to es through Python working
+```sh
+pip install elasticsearch
+pip install pandas
+
+
+import requests
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+response = requests.get('https://52.147.212.172:9200', verify=False, auth=('elastic', 'ZI8DOAE42j486958hqqt7izr'))
+
+print (response.text)
+
+try:
+    import os
+    import sys
+    
+    from elasticsearch import Elasticsearch as Elasticsearch
+    
+    import pandas as pd
+    
+    print('All modules loaded')
+    
+except Exception as e:
+    print("some error {}".format(e))
+    
+es = Elasticsearch([{'host' : '52.147.212.172', 'port': 9200}])
+es = Elasticsearch(['https://elastic:ZI8DOAE42j486958hqqt7izr@52.147.212.172:9200'])
+
+es.ping() # Should be true if conneciton successful, TODO: Work on getting this connection
+
+
+## importing socket module
+import socket
+## getting the hostname by socket.gethostname() method
+hostname = socket.gethostname()
+## getting the IP address using socket.gethostbyname() method
+ip_address = socket.gethostbyname(hostname)
+## printing the hostname and ip_address
+print(f"Hostname: {hostname}")
+print(f"IP Address: {ip_address}")
+
+```
+
+# END
+
 ### Current State: 
 ![WIP image](https://github.com/matheesan-CGI/oneClickDeployDSE/edit/main/12-23-20WIP.png?raw=true)
 
