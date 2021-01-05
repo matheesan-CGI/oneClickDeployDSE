@@ -103,25 +103,25 @@ kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
 
 ```sh
 cat <<EOF | kubectl apply -f -
-> apiVersion: elasticsearch.k8s.elastic.co/v1 
-> kind: Elasticsearch 
-> metadata: 
->   name: quickstart 
-> spec: 
->   version: 7.9.2 #Make sure you use the version of your choice 
->   http: 
->     service: 
->       spec: 
->         type: LoadBalancer #Adds a External IP 
->   nodeSets: 
->   - name: default 
->     count: 1 
->     config: 
->       node.master: true 
->       node.data: true 
->       node.ingest: true 
->       node.store.allow_mmap: false 
-> EOF
+apiVersion: elasticsearch.k8s.elastic.co/v1 
+kind: Elasticsearch 
+metadata: 
+  name: quickstart 
+spec: 
+  version: 7.9.2 #Make sure you use the version of your choice 
+  http: 
+    service: 
+      spec: 
+        type: LoadBalancer #Adds a External IP 
+  nodeSets: 
+  - name: default 
+    count: 1 
+    config: 
+      node.master: true 
+      node.data: true 
+      node.ingest: true 
+      node.store.allow_mmap: false 
+EOF
 ```
 
 ```sh
@@ -147,20 +147,20 @@ KIBANA:
 
 ```sh
 cat <<EOF | kubectl apply -f - 
-> apiVersion: kibana.k8s.elastic.co/v1 
-> kind: Kibana 
-> metadata: 
->   name: quickstart 
-> spec: 
->   version: 7.9.2 #Make sure Kibana and Elasticsearch are on the same version. 
->   http: 
->     service: 
->       spec: 
->         type: LoadBalancer #Adds a External IP 
->   count: 1 
->   elasticsearchRef: 
->     name: quickstart 
-> EOF
+apiVersion: kibana.k8s.elastic.co/v1 
+kind: Kibana 
+metadata: 
+  name: quickstart 
+spec: 
+  version: 7.9.2 #Make sure Kibana and Elasticsearch are on the same version. 
+  http: 
+    service: 
+      spec: 
+        type: LoadBalancer #Adds a External IP 
+  count: 1 
+  elasticsearchRef: 
+    name: quickstart 
+EOF
 ```
 
 ```sh
