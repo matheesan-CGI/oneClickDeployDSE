@@ -222,7 +222,7 @@ import requests
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-response = requests.get('https://52.147.212.172:9200', verify=False, auth=('elastic', 'ZI8DOAE42j486958hqqt7izr'))
+response = requests.get('https://<ExternalIPofES>:9200', verify=False, auth=('elastic', 'ZI8DOAE42j486958hqqt7izr'))
 
 print (response.text)
 
@@ -239,10 +239,8 @@ try:
 except Exception as e:
     print("some error {}".format(e))
     
-es = Elasticsearch([{'host' : '52.147.212.172', 'port': 9200}])
-es = Elasticsearch(['https://elastic:ZI8DOAE42j486958hqqt7izr@52.147.212.172:9200'])
+es = Elasticsearch(['https://elastic:<base64-decoded_password>@<ExternalIPofES>:9200/'], verify_certs=False)
 
-es.ping() # Should be true if conneciton successful, TODO: Work on getting this connection
 
 
 ## importing socket module
