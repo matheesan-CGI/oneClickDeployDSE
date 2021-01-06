@@ -1,0 +1,744 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting elasticsearch\n",
+      "  Downloading elasticsearch-7.10.1-py2.py3-none-any.whl (322 kB)\n",
+      "\u001b[K     |████████████████████████████████| 322 kB 7.5 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: urllib3<2,>=1.21.1 in /opt/conda/lib/python3.7/site-packages (from elasticsearch) (1.25.7)\n",
+      "Requirement already satisfied: certifi in /opt/conda/lib/python3.7/site-packages (from elasticsearch) (2019.11.28)\n",
+      "Installing collected packages: elasticsearch\n",
+      "Successfully installed elasticsearch-7.10.1\n",
+      "Note: you may need to restart the kernel to use updated packages.\n"
+     ]
+    }
+   ],
+   "source": [
+    "pip install elasticsearch"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting pandas\n",
+      "  Downloading pandas-1.2.0-cp37-cp37m-manylinux1_x86_64.whl (9.9 MB)\n",
+      "\u001b[K     |████████████████████████████████| 9.9 MB 6.8 MB/s eta 0:00:01\n",
+      "\u001b[?25hCollecting numpy>=1.16.5\n",
+      "  Downloading numpy-1.19.5-cp37-cp37m-manylinux2010_x86_64.whl (14.8 MB)\n",
+      "\u001b[K     |████████████████████████████████| 14.8 MB 55.4 MB/s eta 0:00:01\n",
+      "\u001b[?25hCollecting pytz>=2017.3\n",
+      "  Downloading pytz-2020.5-py2.py3-none-any.whl (510 kB)\n",
+      "\u001b[K     |████████████████████████████████| 510 kB 40.6 MB/s eta 0:00:01\n",
+      "\u001b[?25hRequirement already satisfied: python-dateutil>=2.7.3 in /opt/conda/lib/python3.7/site-packages (from pandas) (2.8.1)\n",
+      "Requirement already satisfied: six>=1.5 in /opt/conda/lib/python3.7/site-packages (from python-dateutil>=2.7.3->pandas) (1.14.0)\n",
+      "Installing collected packages: numpy, pytz, pandas\n",
+      "Successfully installed numpy-1.19.5 pandas-1.2.0 pytz-2020.5\n",
+      "Note: you may need to restart the kernel to use updated packages.\n"
+     ]
+    }
+   ],
+   "source": [
+    "pip install pandas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Requirement already satisfied: numpy in /opt/conda/lib/python3.7/site-packages (1.19.5)\n",
+      "Note: you may need to restart the kernel to use updated packages.\n"
+     ]
+    }
+   ],
+   "source": [
+    "pip install numpy"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{\n",
+      "  \"name\" : \"quickstart-es-default-0\",\n",
+      "  \"cluster_name\" : \"quickstart\",\n",
+      "  \"cluster_uuid\" : \"5m3ICIgNQ1ShO0XD_KeEhg\",\n",
+      "  \"version\" : {\n",
+      "    \"number\" : \"7.9.2\",\n",
+      "    \"build_flavor\" : \"default\",\n",
+      "    \"build_type\" : \"docker\",\n",
+      "    \"build_hash\" : \"d34da0ea4a966c4e49417f2da2f244e3e97b4e6e\",\n",
+      "    \"build_date\" : \"2020-09-23T00:45:33.626720Z\",\n",
+      "    \"build_snapshot\" : false,\n",
+      "    \"lucene_version\" : \"8.6.2\",\n",
+      "    \"minimum_wire_compatibility_version\" : \"6.8.0\",\n",
+      "    \"minimum_index_compatibility_version\" : \"6.0.0-beta1\"\n",
+      "  },\n",
+      "  \"tagline\" : \"You Know, for Search\"\n",
+      "}\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "import requests\n",
+    "import urllib3\n",
+    "urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)\n",
+    "\n",
+    "response = requests.get('https://20.62.218.129:9200', verify=False, auth=('elastic', '153nUNQ15KSHFdc9T1gnF617'))\n",
+    "\n",
+    "print (response.text)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All modules loaded\n"
+     ]
+    }
+   ],
+   "source": [
+    "try:\n",
+    "    import os\n",
+    "    import sys\n",
+    "    \n",
+    "    from elasticsearch import Elasticsearch as Elasticsearch\n",
+    "    \n",
+    "    import pandas as pd\n",
+    "    \n",
+    "    print('All modules loaded')\n",
+    "    \n",
+    "except Exception as e:\n",
+    "    print(\"some error {}\".format(e))\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Successful connection\n"
+     ]
+    }
+   ],
+   "source": [
+    "es = Elasticsearch(['https://elastic:153nUNQ15KSHFdc9T1gnF617@20.62.218.129:9200/'], verify_certs=False)\n",
+    "\n",
+    "if not es.ping():\n",
+    "    raise ValueError(\"Connection failed\")\n",
+    "else:\n",
+    "    print(\"Successful connection\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Hostname: jupyter-test2\n",
+      "IP Address: 10.244.0.11\n"
+     ]
+    }
+   ],
+   "source": [
+    "## importing socket module\n",
+    "import socket\n",
+    "## getting the hostname by socket.gethostname() method\n",
+    "hostname = socket.gethostname()\n",
+    "## getting the IP address using socket.gethostbyname() method\n",
+    "ip_address = socket.gethostbyname(hostname)\n",
+    "## printing the hostname and ip_address\n",
+    "print(f\"Hostname: {hostname}\")\n",
+    "print(f\"IP Address: {ip_address}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas\n",
+    "import json"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "documents returned: 5\n"
+     ]
+    }
+   ],
+   "source": [
+    "numDocsToReturn = 5\n",
+    "response = es.search(\n",
+    "    index='firstccindex',\n",
+    "    body={},\n",
+    "    size=numDocsToReturn\n",
+    ")\n",
+    "\n",
+    "# declare a new list for the Elasticsearch documents\n",
+    "# nested inside the API response object\n",
+    "elastic_docs = response[\"hits\"][\"hits\"]\n",
+    "\n",
+    "# print number of documents\n",
+    "print (\"documents returned:\", len(response[\"hits\"][\"hits\"]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0 --> {'_index': 'firstccindex', '_type': '_doc', '_id': 'UEr_1nYBSWDEGt7z1vaE', '_score': 1.0, '_source': {'Time': 3186, 'V21': 0.289189123127622, 'V20': 0.0633949229915811, 'V23': -0.0701182035711267, 'V22': 0.43619927429134, 'V25': -0.349539097587465, 'V24': 0.0956355806784118, 'V27': 0.0982673397726208, 'V1': -1.76224127285468, 'V26': -0.598336367270698, 'V2': -0.288385276060124, 'V3': 1.87682885032932, 'V28': -0.093640514885264, 'V4': 0.484121808916654, 'V5': 0.409568036496767, 'V6': -0.504884987632883, 'V7': -0.745796766735582, 'V8': 0.739941986301708, 'V9': 0.0628307356977856, 'Amount': 1.0, 'V10': -1.03702039091932, 'V12': 0.772708549698217, 'V11': -0.773840665193246, 'V14': -0.0806835099155634, 'V13': 0.658763309485626, 'V16': 0.23939695183603, 'Class': 0, 'V15': 0.10679188157441, 'V18': -0.284511634722347, 'V17': -0.25122289011288, 'V19': -1.34190704782464}} \n",
+      "\n",
+      "1 --> {'_index': 'firstccindex', '_type': '_doc', '_id': 'UUr_1nYBSWDEGt7z1vaE', '_score': 1.0, '_source': {'Time': 3188, 'V21': 0.136442920652033, 'V20': 0.222134261694367, 'V23': -0.17728490763992, 'V22': 0.192663906084137, 'V25': 0.504884674831443, 'V24': 0.429841236626278, 'V27': -0.0940727156557565, 'V1': -0.803212262353009, 'V26': 0.350214311058656, 'V2': 1.7518297733748, 'V3': 1.15197919823425, 'V28': 0.0190654791463626, 'V4': 2.83588917847517, 'V5': 0.053113986729986, 'V6': -0.314088079276177, 'V7': 0.979349507303046, 'V8': 0.175583659734699, 'V9': -2.31096803168636, 'Amount': 67.46, 'V10': 0.326308440904319, 'V12': 0.0134212703151282, 'V11': -0.517726053688159, 'V14': 0.686257723792177, 'V13': 0.914328581201601, 'V16': -0.325982403926976, 'Class': 0, 'V15': 0.87147117737041, 'V18': -0.162927961963911, 'V17': 0.305774023987767, 'V19': 0.942235083179113}} \n",
+      "\n",
+      "2 --> {'_index': 'firstccindex', '_type': '_doc', '_id': 'Ukr_1nYBSWDEGt7z1vaE', '_score': 1.0, '_source': {'Time': 3189, 'V21': -0.218612386766468, 'V20': 0.142825046388776, 'V23': -0.136160759957389, 'V22': -0.567439848228491, 'V25': -0.131520920019107, 'V24': -1.16319469020949, 'V27': 0.27535829907462, 'V1': -0.436888920644903, 'V26': 0.154994830616141, 'V2': 0.900022783884373, 'V3': 1.06682647834445, 'V28': 0.0967207652569599, 'V4': -0.465934953723897, 'V5': 0.760900033709472, 'V6': 0.567214476179168, 'V7': 0.519775682438866, 'V8': 0.282196049323044, 'V9': -0.610300953956021, 'Amount': 8.01, 'V10': -0.194611090715551, 'V12': 0.44710898721993, 'V11': 0.511341861204644, 'V14': 0.257887228652728, 'V13': 0.335756365603354, 'V16': 0.433868164773195, 'Class': 0, 'V15': 0.463493663168717, 'V18': 0.0523813408637991, 'V17': -0.801490416032633, 'V19': 0.382291205389201}} \n",
+      "\n",
+      "3 --> {'_index': 'firstccindex', '_type': '_doc', '_id': 'U0r_1nYBSWDEGt7z1vaE', '_score': 1.0, '_source': {'Time': 3190, 'V21': 0.125971866603336, 'V20': -0.00535189849554285, 'V23': -0.0144196663115048, 'V22': 0.473096177097698, 'V25': 0.138046324235724, 'V24': 0.175062493680231, 'V27': -0.0162803466330981, 'V1': 1.06662038332585, 'V26': 1.06122273122751, 'V2': -0.0156749323652053, 'V3': 1.33630541014872, 'V28': 0.0243188042803207, 'V4': 1.83161950547827, 'V5': -0.709615087532383, 'V6': 0.393105378114889, 'V7': -0.607227754192699, 'V8': 0.178964545648618, 'V9': -0.0174098808162321, 'Amount': 36.04, 'V10': 0.344657753976554, 'V12': 0.605529162501438, 'V11': -0.385762355649167, 'V14': -0.521518758034958, 'V13': 1.04358852158028, 'V16': 0.509586163943522, 'Class': 0, 'V15': 0.372693683943898, 'V18': -0.702739265814513, 'V17': -0.231907694250065, 'V19': -1.14412796854657}} \n",
+      "\n",
+      "4 --> {'_index': 'firstccindex', '_type': '_doc', '_id': 'VEr_1nYBSWDEGt7z1vaE', '_score': 1.0, '_source': {'Time': 3195, 'V21': -0.189232737689461, 'V20': -0.219256239886512, 'V23': 0.187242857265462, 'V22': -0.700005940432196, 'V25': 0.09160397875979, 'V24': 0.119865777789388, 'V27': 0.0273053197540224, 'V1': 1.07080084558208, 'V26': -0.690416566834187, 'V2': 0.0418199862821149, 'V3': 0.667713181733014, 'V28': 0.0221302342059113, 'V4': 1.02356962239801, 'V5': -0.486856698500428, 'V6': -0.196153463985608, 'V7': -0.210674382073163, 'V8': 0.215182451142496, 'V9': 0.0654408545750407, 'Amount': 29.0, 'V10': 0.126958169017304, 'V12': 0.263983513027483, 'V11': 1.51128008616452, 'V14': 0.866890681554364, 'V13': -1.71475911610725, 'V16': 0.217373431914508, 'Class': 0, 'V15': 0.793690843677686, 'V18': -0.162753636274268, 'V17': -0.305565310919264, 'V19': -0.425243121437284}} \n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# iterate over all of the docs (use iteritems() in Python 2)\n",
+    "for key, val in response[\"hits\"].items():\n",
+    "    if key == \"hits\":\n",
+    "        for num, doc in enumerate(val):\n",
+    "            print (num, '-->', doc, \"\\n\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fields = {}\n",
+    "for num, doc in enumerate(elastic_docs):\n",
+    "        pass\n",
+    "        # get source data from document\n",
+    "        source_data = doc[\"_source\"]\n",
+    "        # iterate source data (use iteritems() for Python 2)\n",
+    "        for key, val in source_data.items():\n",
+    "            try:\n",
+    "                fields[key] = np.append(fields[key], val)\n",
+    "            except KeyError:\n",
+    "                fields[key] = np.array([val])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Time ---> [3186 3188 3189 3190 3195]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V21 ---> [ 0.28918912  0.13644292 -0.21861239  0.12597187 -0.18923274]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V20 ---> [ 0.06339492  0.22213426  0.14282505 -0.0053519  -0.21925624]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V23 ---> [-0.0701182  -0.17728491 -0.13616076 -0.01441967  0.18724286]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V22 ---> [ 0.43619927  0.19266391 -0.56743985  0.47309618 -0.70000594]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V25 ---> [-0.3495391   0.50488467 -0.13152092  0.13804632  0.09160398]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V24 ---> [ 0.09563558  0.42984124 -1.16319469  0.17506249  0.11986578]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V27 ---> [ 0.09826734 -0.09407272  0.2753583  -0.01628035  0.02730532]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V1 ---> [-1.76224127 -0.80321226 -0.43688892  1.06662038  1.07080085]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V26 ---> [-0.59833637  0.35021431  0.15499483  1.06122273 -0.69041657]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V2 ---> [-0.28838528  1.75182977  0.90002278 -0.01567493  0.04181999]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V3 ---> [1.87682885 1.1519792  1.06682648 1.33630541 0.66771318]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V28 ---> [-0.09364051  0.01906548  0.09672077  0.0243188   0.02213023]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V4 ---> [ 0.48412181  2.83588918 -0.46593495  1.83161951  1.02356962]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V5 ---> [ 0.40956804  0.05311399  0.76090003 -0.70961509 -0.4868567 ]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V6 ---> [-0.50488499 -0.31408808  0.56721448  0.39310538 -0.19615346]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V7 ---> [-0.74579677  0.97934951  0.51977568 -0.60722775 -0.21067438]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V8 ---> [0.73994199 0.17558366 0.28219605 0.17896455 0.21518245]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V9 ---> [ 0.06283074 -2.31096803 -0.61030095 -0.01740988  0.06544085]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "Amount ---> [ 1.   67.46  8.01 36.04 29.  ]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V10 ---> [-1.03702039  0.32630844 -0.19461109  0.34465775  0.12695817]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V12 ---> [0.77270855 0.01342127 0.44710899 0.60552916 0.26398351]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V11 ---> [-0.77384067 -0.51772605  0.51134186 -0.38576236  1.51128009]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V14 ---> [-0.08068351  0.68625772  0.25788723 -0.52151876  0.86689068]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V13 ---> [ 0.65876331  0.91432858  0.33575637  1.04358852 -1.71475912]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V16 ---> [ 0.23939695 -0.3259824   0.43386816  0.50958616  0.21737343]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "Class ---> [0 0 0 0 0]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V15 ---> [0.10679188 0.87147118 0.46349366 0.37269368 0.79369084]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V18 ---> [-0.28451163 -0.16292796  0.05238134 -0.70273927 -0.16275364]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V17 ---> [-0.25122289  0.30577402 -0.80149042 -0.23190769 -0.30556531]\n",
+      "NumPy array len: 5 \n",
+      "\n",
+      "V19 ---> [-1.34190705  0.94223508  0.38229121 -1.14412797 -0.42524312]\n",
+      "NumPy array len: 5 \n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "for key, val in fields.items():\n",
+    "    print (key, \"--->\", val)\n",
+    "    print (\"NumPy array len:\", len(val), \"\\n\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "elastic_df: <class 'pandas.core.frame.DataFrame'> \n",
+      "\n",
+      "   Time       V21       V20       V23       V22       V25       V24       V27  \\\n",
+      "0  3186  0.289189  0.063395 -0.070118  0.436199 -0.349539  0.095636  0.098267   \n",
+      "1  3188  0.136443  0.222134 -0.177285  0.192664  0.504885  0.429841 -0.094073   \n",
+      "2  3189 -0.218612  0.142825 -0.136161 -0.567440 -0.131521 -1.163195  0.275358   \n",
+      "3  3190  0.125972 -0.005352 -0.014420  0.473096  0.138046  0.175062 -0.016280   \n",
+      "4  3195 -0.189233 -0.219256  0.187243 -0.700006  0.091604  0.119866  0.027305   \n",
+      "\n",
+      "         V1       V26  ...       V12       V11       V14       V13       V16  \\\n",
+      "0 -1.762241 -0.598336  ...  0.772709 -0.773841 -0.080684  0.658763  0.239397   \n",
+      "1 -0.803212  0.350214  ...  0.013421 -0.517726  0.686258  0.914329 -0.325982   \n",
+      "2 -0.436889  0.154995  ...  0.447109  0.511342  0.257887  0.335756  0.433868   \n",
+      "3  1.066620  1.061223  ...  0.605529 -0.385762 -0.521519  1.043589  0.509586   \n",
+      "4  1.070801 -0.690417  ...  0.263984  1.511280  0.866891 -1.714759  0.217373   \n",
+      "\n",
+      "   Class       V15       V18       V17       V19  \n",
+      "0      0  0.106792 -0.284512 -0.251223 -1.341907  \n",
+      "1      0  0.871471 -0.162928  0.305774  0.942235  \n",
+      "2      0  0.463494  0.052381 -0.801490  0.382291  \n",
+      "3      0  0.372694 -0.702739 -0.231908 -1.144128  \n",
+      "4      0  0.793691 -0.162754 -0.305565 -0.425243  \n",
+      "\n",
+      "[5 rows x 31 columns]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# create a Pandas DataFrame array from the fields dict\n",
+    "elastic_df = pandas.DataFrame(fields)\n",
+    "\n",
+    "print ('elastic_df:', type(elastic_df), \"\\n\")\n",
+    "print (elastic_df) # print out the DF object's contents"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "to_json() method: {\"Time\":{\"0\":3186,\"1\":3188,\"2\":3189,\"3\":3190,\"4\":3195},\"V21\":{\"0\":0.2891891231,\"1\":0.1364429207,\"2\":-0.2186123868,\"3\":0.1259718666,\"4\":-0.1892327377},\"V20\":{\"0\":0.063394923,\"1\":0.2221342617,\"2\":0.1428250464,\"3\":-0.0053518985,\"4\":-0.2192562399},\"V23\":{\"0\":-0.0701182036,\"1\":-0.1772849076,\"2\":-0.13616076,\"3\":-0.0144196663,\"4\":0.1872428573},\"V22\":{\"0\":0.4361992743,\"1\":0.1926639061,\"2\":-0.5674398482,\"3\":0.4730961771,\"4\":-0.7000059404},\"V25\":{\"0\":-0.3495390976,\"1\":0.5048846748,\"2\":-0.13152092,\"3\":0.1380463242,\"4\":0.0916039788},\"V24\":{\"0\":0.0956355807,\"1\":0.4298412366,\"2\":-1.1631946902,\"3\":0.1750624937,\"4\":0.1198657778},\"V27\":{\"0\":0.0982673398,\"1\":-0.0940727157,\"2\":0.2753582991,\"3\":-0.0162803466,\"4\":0.0273053198},\"V1\":{\"0\":-1.7622412729,\"1\":-0.8032122624,\"2\":-0.4368889206,\"3\":1.0666203833,\"4\":1.0708008456},\"V26\":{\"0\":-0.5983363673,\"1\":0.3502143111,\"2\":0.1549948306,\"3\":1.0612227312,\"4\":-0.6904165668},\"V2\":{\"0\":-0.2883852761,\"1\":1.7518297734,\"2\":0.9000227839,\"3\":-0.0156749324,\"4\":0.0418199863},\"V3\":{\"0\":1.8768288503,\"1\":1.1519791982,\"2\":1.0668264783,\"3\":1.3363054101,\"4\":0.6677131817},\"V28\":{\"0\":-0.0936405149,\"1\":0.0190654791,\"2\":0.0967207653,\"3\":0.0243188043,\"4\":0.0221302342},\"V4\":{\"0\":0.4841218089,\"1\":2.8358891785,\"2\":-0.4659349537,\"3\":1.8316195055,\"4\":1.0235696224},\"V5\":{\"0\":0.4095680365,\"1\":0.0531139867,\"2\":0.7609000337,\"3\":-0.7096150875,\"4\":-0.4868566985},\"V6\":{\"0\":-0.5048849876,\"1\":-0.3140880793,\"2\":0.5672144762,\"3\":0.3931053781,\"4\":-0.196153464},\"V7\":{\"0\":-0.7457967667,\"1\":0.9793495073,\"2\":0.5197756824,\"3\":-0.6072277542,\"4\":-0.2106743821},\"V8\":{\"0\":0.7399419863,\"1\":0.1755836597,\"2\":0.2821960493,\"3\":0.1789645456,\"4\":0.2151824511},\"V9\":{\"0\":0.0628307357,\"1\":-2.3109680317,\"2\":-0.610300954,\"3\":-0.0174098808,\"4\":0.0654408546},\"Amount\":{\"0\":1.0,\"1\":67.46,\"2\":8.01,\"3\":36.04,\"4\":29.0},\"V10\":{\"0\":-1.0370203909,\"1\":0.3263084409,\"2\":-0.1946110907,\"3\":0.344657754,\"4\":0.126958169},\"V12\":{\"0\":0.7727085497,\"1\":0.0134212703,\"2\":0.4471089872,\"3\":0.6055291625,\"4\":0.263983513},\"V11\":{\"0\":-0.7738406652,\"1\":-0.5177260537,\"2\":0.5113418612,\"3\":-0.3857623556,\"4\":1.5112800862},\"V14\":{\"0\":-0.0806835099,\"1\":0.6862577238,\"2\":0.2578872287,\"3\":-0.521518758,\"4\":0.8668906816},\"V13\":{\"0\":0.6587633095,\"1\":0.9143285812,\"2\":0.3357563656,\"3\":1.0435885216,\"4\":-1.7147591161},\"V16\":{\"0\":0.2393969518,\"1\":-0.3259824039,\"2\":0.4338681648,\"3\":0.5095861639,\"4\":0.2173734319},\"Class\":{\"0\":0,\"1\":0,\"2\":0,\"3\":0,\"4\":0},\"V15\":{\"0\":0.1067918816,\"1\":0.8714711774,\"2\":0.4634936632,\"3\":0.3726936839,\"4\":0.7936908437},\"V18\":{\"0\":-0.2845116347,\"1\":-0.162927962,\"2\":0.0523813409,\"3\":-0.7027392658,\"4\":-0.1627536363},\"V17\":{\"0\":-0.2512228901,\"1\":0.305774024,\"2\":-0.801490416,\"3\":-0.2319076943,\"4\":-0.3055653109},\"V19\":{\"0\":-1.3419070478,\"1\":0.9422350832,\"2\":0.3822912054,\"3\":-1.1441279685,\"4\":-0.4252431214}}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# create a JSON string from the Pandas object\n",
+    "json_data = elastic_df.to_json()\n",
+    "print (\"\\nto_json() method:\", json_data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "json_data is a valid JSON string\n"
+     ]
+    }
+   ],
+   "source": [
+    "# verify that the to_json() method made a JSON string\n",
+    "try:\n",
+    "    json.loads(json_data)\n",
+    "    print (\"\\njson_data is a valid JSON string\")\n",
+    "except json.decoder.JSONDecodeError as err:\n",
+    "    print (\"\\njson.decoder.JSONDecodeError:\", err)\n",
+    "    print (\"json_data is NOT a valid JSON string\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# create an empty dict for series arrays\n",
+    "elastic_series = {}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/opt/conda/lib/python3.7/site-packages/ipykernel_launcher.py:11: DeprecationWarning: The default dtype for empty Series will be 'object' instead of 'float64' in a future version. Specify a dtype explicitly to silence this warning.\n",
+      "  # This is added back by InteractiveShellApp.init_path()\n",
+      "/opt/conda/lib/python3.7/site-packages/ipykernel_launcher.py:13: DeprecationWarning: The default dtype for empty Series will be 'object' instead of 'float64' in a future version. Specify a dtype explicitly to silence this warning.\n",
+      "  del sys.path[0]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# iterate the docs returned by API call\n",
+    "for num, doc in enumerate(elastic_docs):\n",
+    "\n",
+    "    # get the _id for the doc\n",
+    "    _id = doc[\"_id\"]\n",
+    "\n",
+    "    # get source data from document\n",
+    "    source_data = doc[\"_source\"]\n",
+    "\n",
+    "    # make a Pandas Series object for the doc using _id as key\n",
+    "    elastic_series[_id] = pandas.Series()\n",
+    "    # make a Pandas Series object for the doc using _id as key\n",
+    "    elastic_series[_id] = pandas.Series()\n",
+    "\n",
+    "    # iterate source data (use iteritems() for Python 2)\n",
+    "    for field, value in source_data.items():\n",
+    "\n",
+    "        # set the field type as Series index and value as Series val\n",
+    "        elastic_series[_id].at[field] = value"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "ID: UEr_1nYBSWDEGt7z1vaE \n",
+      " Time      3186.000000\n",
+      "V21          0.289189\n",
+      "V20          0.063395\n",
+      "V23         -0.070118\n",
+      "V22          0.436199\n",
+      "V25         -0.349539\n",
+      "V24          0.095636\n",
+      "V27          0.098267\n",
+      "V1          -1.762241\n",
+      "V26         -0.598336\n",
+      "V2          -0.288385\n",
+      "V3           1.876829\n",
+      "V28         -0.093641\n",
+      "V4           0.484122\n",
+      "V5           0.409568\n",
+      "V6          -0.504885\n",
+      "V7          -0.745797\n",
+      "V8           0.739942\n",
+      "V9           0.062831\n",
+      "Amount       1.000000\n",
+      "V10         -1.037020\n",
+      "V12          0.772709\n",
+      "V11         -0.773841\n",
+      "V14         -0.080684\n",
+      "V13          0.658763\n",
+      "V16          0.239397\n",
+      "Class        0.000000\n",
+      "V15          0.106792\n",
+      "V18         -0.284512\n",
+      "V17         -0.251223\n",
+      "V19         -1.341907\n",
+      "dtype: float64\n",
+      "\n",
+      "ID: UUr_1nYBSWDEGt7z1vaE \n",
+      " Time      3188.000000\n",
+      "V21          0.136443\n",
+      "V20          0.222134\n",
+      "V23         -0.177285\n",
+      "V22          0.192664\n",
+      "V25          0.504885\n",
+      "V24          0.429841\n",
+      "V27         -0.094073\n",
+      "V1          -0.803212\n",
+      "V26          0.350214\n",
+      "V2           1.751830\n",
+      "V3           1.151979\n",
+      "V28          0.019065\n",
+      "V4           2.835889\n",
+      "V5           0.053114\n",
+      "V6          -0.314088\n",
+      "V7           0.979350\n",
+      "V8           0.175584\n",
+      "V9          -2.310968\n",
+      "Amount      67.460000\n",
+      "V10          0.326308\n",
+      "V12          0.013421\n",
+      "V11         -0.517726\n",
+      "V14          0.686258\n",
+      "V13          0.914329\n",
+      "V16         -0.325982\n",
+      "Class        0.000000\n",
+      "V15          0.871471\n",
+      "V18         -0.162928\n",
+      "V17          0.305774\n",
+      "V19          0.942235\n",
+      "dtype: float64\n",
+      "\n",
+      "ID: Ukr_1nYBSWDEGt7z1vaE \n",
+      " Time      3189.000000\n",
+      "V21         -0.218612\n",
+      "V20          0.142825\n",
+      "V23         -0.136161\n",
+      "V22         -0.567440\n",
+      "V25         -0.131521\n",
+      "V24         -1.163195\n",
+      "V27          0.275358\n",
+      "V1          -0.436889\n",
+      "V26          0.154995\n",
+      "V2           0.900023\n",
+      "V3           1.066826\n",
+      "V28          0.096721\n",
+      "V4          -0.465935\n",
+      "V5           0.760900\n",
+      "V6           0.567214\n",
+      "V7           0.519776\n",
+      "V8           0.282196\n",
+      "V9          -0.610301\n",
+      "Amount       8.010000\n",
+      "V10         -0.194611\n",
+      "V12          0.447109\n",
+      "V11          0.511342\n",
+      "V14          0.257887\n",
+      "V13          0.335756\n",
+      "V16          0.433868\n",
+      "Class        0.000000\n",
+      "V15          0.463494\n",
+      "V18          0.052381\n",
+      "V17         -0.801490\n",
+      "V19          0.382291\n",
+      "dtype: float64\n",
+      "\n",
+      "ID: U0r_1nYBSWDEGt7z1vaE \n",
+      " Time      3190.000000\n",
+      "V21          0.125972\n",
+      "V20         -0.005352\n",
+      "V23         -0.014420\n",
+      "V22          0.473096\n",
+      "V25          0.138046\n",
+      "V24          0.175062\n",
+      "V27         -0.016280\n",
+      "V1           1.066620\n",
+      "V26          1.061223\n",
+      "V2          -0.015675\n",
+      "V3           1.336305\n",
+      "V28          0.024319\n",
+      "V4           1.831620\n",
+      "V5          -0.709615\n",
+      "V6           0.393105\n",
+      "V7          -0.607228\n",
+      "V8           0.178965\n",
+      "V9          -0.017410\n",
+      "Amount      36.040000\n",
+      "V10          0.344658\n",
+      "V12          0.605529\n",
+      "V11         -0.385762\n",
+      "V14         -0.521519\n",
+      "V13          1.043589\n",
+      "V16          0.509586\n",
+      "Class        0.000000\n",
+      "V15          0.372694\n",
+      "V18         -0.702739\n",
+      "V17         -0.231908\n",
+      "V19         -1.144128\n",
+      "dtype: float64\n",
+      "\n",
+      "ID: VEr_1nYBSWDEGt7z1vaE \n",
+      " Time      3195.000000\n",
+      "V21         -0.189233\n",
+      "V20         -0.219256\n",
+      "V23          0.187243\n",
+      "V22         -0.700006\n",
+      "V25          0.091604\n",
+      "V24          0.119866\n",
+      "V27          0.027305\n",
+      "V1           1.070801\n",
+      "V26         -0.690417\n",
+      "V2           0.041820\n",
+      "V3           0.667713\n",
+      "V28          0.022130\n",
+      "V4           1.023570\n",
+      "V5          -0.486857\n",
+      "V6          -0.196153\n",
+      "V7          -0.210674\n",
+      "V8           0.215182\n",
+      "V9           0.065441\n",
+      "Amount      29.000000\n",
+      "V10          0.126958\n",
+      "V12          0.263984\n",
+      "V11          1.511280\n",
+      "V14          0.866891\n",
+      "V13         -1.714759\n",
+      "V16          0.217373\n",
+      "Class        0.000000\n",
+      "V15          0.793691\n",
+      "V18         -0.162754\n",
+      "V17         -0.305565\n",
+      "V19         -0.425243\n",
+      "dtype: float64\n"
+     ]
+    }
+   ],
+   "source": [
+    "for key, doc in elastic_series.items():\n",
+    "    print (\"\\nID:\", key, \"\\n\", doc)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
