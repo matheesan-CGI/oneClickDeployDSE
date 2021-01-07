@@ -1,16 +1,19 @@
 # One Click K3d(Jhub, Elastic) --> K3d
 
-Dillinger is a cloud-enabled, mobile-ready, offline-storage, AngularJS powered HTML5 Markdown editor.
+The purpose of this set of scripts is to eventually evolve it into a one-click solution to get a Data science environment going.
 
   - One click installation of DSA Environment
     - Install Jhub on K3d Eviornment
     - Eventually make this cloud agnostic
-  - See HTML in the right
-  - Magic
+  - Currently has k3d set of features working with JupyterHub
+  - Has a Azure set of features working with Elasticsearch, Kibana and JupyterHub
+    - To get Jupyterhub on Azure, follow the steps in the JupyterHub setup section while ignoring the k3d cluster creation portion
+  - Optional setup for Kubernetes Dashboard is included
 
 # MacOS Jupyterhub K3d Installation
 
-#### K3d:
+##### After installing K3d from k3d.io documentation, follow these steps to set up your cluster for JupyterHub:
+Note: this cluster currently doesn't work with elasticsearch installation
 ```sh
 #Create Cluster with chosen name
 k3d cluster create <NAME> --agents 3
@@ -19,14 +22,21 @@ k3d kubeconfig merge <NAME> --switch-context
 #Use the new cluster with kubectl
 kubectl get nodes
 ```
-#### HELM:
+
+#### Creating an Azure Kubernetes Cluster
+```sh
+az aks create -g matheesanmKubeEnv --name elasticCluster --node-count 7 --generate-ssh-keys
+az aks get-credentials --resource-group matheesanmKubeEnv --name elasticCluster
+```
+
+#### Install HELM if not already installed:
 ```sh
 #Install
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 #Verify helm is installed
 helm list
 ```
-#### Config file:
+#### Create config file for JupyterHub:
 ```sh
 #Generate a random hex string representing 32 bytes AND Store this to use as a security token
 openssl rand -hex 32
@@ -36,7 +46,7 @@ nano config.yaml
 proxy:
   secretToken: "<RANDOM_HEX>"
 ```
-#The following are Optional and can be added to config.yaml:
+The following portions of YAML code are Optional and can be added to config.yaml, but are not used in this implementation:
 ```sh
 singleuser:
   memory:
@@ -48,7 +58,7 @@ singleuser:
   storage:
     type: none
 ```
-### JupyterHub Installation:
+## JupyterHub Installation:
 ```sh
 #Install JupyterHub:
 helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
@@ -90,17 +100,20 @@ kubectl get pod --namespace $NAMESPACE
 
 # Azure ElasticSearch + Kibana Installation
 
+#### If you haven't already, create an Azure cluster
 ```sh
-az aks create -g matheesanmKubeEnv --name elasticCluster --node-count 7 --generate-ssh-keys
-az aks get-credentials --resource-group matheesanmKubeEnv --name elasticCluster
+az aks create -g <resourceGroupName> --name <kubernetesCluster> --node-count 7 --generate-ssh-keys
+az aks get-credentials --resource-group <resourceGroupName> --name <kubernetesCluster>
 ```
 
+#### Install the Elastic Operator
 ```sh
 kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
 #Log checking:
 kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
 ```
 
+#### Deploy an elasticsearch cluster
 ```sh
 cat <<EOF | kubectl apply -f -
 apiVersion: elasticsearch.k8s.elastic.co/v1 
@@ -124,6 +137,9 @@ spec:
 EOF
 ```
 
+#### Monitor elasticsearch
+You should eventually see the quickstart-es-http service with an IP for the External Load Balancer.
+Take note of this IP as you will need it later on.
 ```sh
 
 kubectl get elasticsearch
@@ -133,18 +149,20 @@ kubectl get pods -w
 kubectl logs -f quickstart-es-default-0
 
 kubectl get service quickstart-es-http
+```
 
+Get the password using the following command and try to curl into elasticsearch
+Alternativley, you can visit https://<ExternalIP>:9200 and try to login
+The Username is always elastic, and the password can be found using the following commands
+```sh
 PASSWORD=$(kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 —decode)
 
 curl -u "elastic:$PASSWORD" -k "https://52.147.212.172:9200”
-
-Kubectl get svc -A
-
-kubectl get svc quickstart-es-http
 ```
 
-KIBANA:
+## KIBANA Installation:
 
+#### Deploy Kibana
 ```sh
 cat <<EOF | kubectl apply -f - 
 apiVersion: kibana.k8s.elastic.co/v1 
@@ -163,6 +181,7 @@ spec:
 EOF
 ```
 
+#### Follow the same pattern as for elasticsearch to login into Kibana
 ```sh
 kubectl get kibana
 
@@ -172,6 +191,7 @@ curl -u "elastic:$PASSWORD" -k "https://52.147.212.172:9200”
 ```
 
 In the background, run the following for now(Until proper Nodeport setup is added to the yaml):
+The following is only needed if you're not using an External IP
 
 ```sh
 kubectl proxy
@@ -212,7 +232,6 @@ kubectl describe secret admin-user-token-ls25k -n kube-system
 Then follow rest of JupyterHub Config as you would on k3d, but exclude the cluster creation portion to get jupyterHub on Azure.
 
 ### Python Code to verify that jupyterhub can ping to es:
-#### TODO: Get the code to connect to es through Python working
 ```sh
 pip install elasticsearch
 pip install pandas
