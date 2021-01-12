@@ -209,6 +209,11 @@ kubectl port-forward service/quickstart-kb-http 5601
 kubectl get secret quickstart-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 —decode
 ```
 
+JupyterHub Installation(Assuming you have the config file and Helm setup already there)
+```sh
+helm upgrade --cleanup-on-fail --install jhub jupyterhub/jupyterhub --namespace jhub --create-namespace --version=0.9.0 --values config.yaml
+```
+
 
 # KUBE Dashboard Installation(Optional):
 ```sh
