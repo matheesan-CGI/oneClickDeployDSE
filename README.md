@@ -121,7 +121,7 @@ kind: Elasticsearch
 metadata: 
   name: quickstart 
 spec: 
-  version: 7.9.2 #Make sure you use the version of your choice 
+  version: 7.11.1 #Make sure you use the version of your choice 
   http: 
     service: 
       spec: 
@@ -170,7 +170,7 @@ kind: Kibana
 metadata: 
   name: quickstart 
 spec: 
-  version: 7.9.2 #Make sure Kibana and Elasticsearch are on the same version. 
+  version: 7.11.1 #Make sure Kibana and Elasticsearch are on the same version. 
   http: 
     service: 
       spec: 
