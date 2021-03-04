@@ -108,7 +108,7 @@ az aks get-credentials --resource-group <resourceGroupName> --name <kubernetesCl
 
 #### Install the Elastic Operator
 ```sh
-kubectl apply -f https://download.elastic.co/downloads/eck/1.1.2/all-in-one.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/1.4.0/all-in-one.yaml
 #Log checking:
 kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
 ```
