@@ -164,13 +164,13 @@ curl -u "elastic:$PASSWORD" -k "https://52.147.212.172:9200”
 
 #### Deploy Kibana
 ```sh
-cat <<EOF | kubectl apply -f - 
-apiVersion: kibana.k8s.elastic.co/v1 
-kind: Kibana 
-metadata: 
-  name: quickstart 
-spec: 
-  version: 7.11.1 #Make sure Kibana and Elasticsearch are on the same version. 
+cat <<EOF | kubectl apply -f -
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: quickstart
+spec:
+  version: 7.11.2 #Make sure Kibana and Elasticsearch are on the same version. 
   http: 
     service: 
       spec: 
