@@ -108,7 +108,7 @@ az aks get-credentials --resource-group <resourceGroupName> --name <kubernetesCl
 
 #### Install the Elastic Operator
 ```sh
-kubectl apply -f https://download.elastic.co/downloads/eck/1.4.0/all-in-one.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/1.4.1/all-in-one.yaml
 #Log checking:
 kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
 ```
@@ -116,12 +116,12 @@ kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
 #### Deploy an elasticsearch cluster
 ```sh
 cat <<EOF | kubectl apply -f -
-apiVersion: elasticsearch.k8s.elastic.co/v1 
-kind: Elasticsearch 
-metadata: 
-  name: quickstart 
-spec: 
-  version: 7.11.1 #Make sure you use the version of your choice 
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: quickstart
+spec:
+  version: 7.11.2 #Make sure you use the version of your choice 
   http: 
     service: 
       spec: 
